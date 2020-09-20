@@ -1,5 +1,5 @@
 (function($) {
-
+	
 	"use strict";
 
 	$(document).ready(function() {
@@ -30,33 +30,32 @@
 		for (var i = 0; i < elementsLength; i++) {
 			$(item[i]).hoverdir();
 		}
-
-		$(".contactform").on("submit", function() {
-			$(".output_message").text("Sending...");
-
-			var form = $(this);
-			$.ajax({
-				url: form.attr("action"),
-				method: form.attr("method"),
-				data: form.serialize(),
-				success: function(result) {
-					if (result == "success") {
-						$(".form-inputs").css("display", "none");
-						$(".box p").css("display", "none");
-						$(".contactform").find(".output_message").addClass("success");
-						$(".output_message").text("Message Sent!");
-					} else {
-						$(".tabs-container").css("height", "440px");
-
-						$(".contactform").find(".output_message").addClass("error");
-						$(".output_message").text("Error Sending!");
+		
+		$(function(){
+			$(".ajaxForm").submit(function(e){
+				e.preventDefault();
+				var href = $(this).attr("action");
+				$.ajax({
+					type: "POST",
+					dataType: "json",
+					url: href,
+					data: $(this).serialize(),
+					success: function(response){
+						if (response.status == "success") {
+							$(".form-inputs").css("display", "none");
+							$(".box p").css("display", "none");
+							$(".contactform").find(".output_message").addClass("success");
+							$(".output_message").text("Message Sent!");
+						} else {
+							$(".tabs-container").css("height", "440px");
+	
+							$(".contactform").find(".output_message").addClass("error");
+							$(".output_message").text("Error Sending!");
+						}
 					}
-				}
+				});
 			});
-
-			return false;
 		});
-
 	});
 
 })(jQuery);
